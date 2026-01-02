@@ -4,20 +4,22 @@ import (
 	"context"
 
 	"go.uber.org/fx"
+
+	"github.com/not-for-prod/observer/logger"
 )
 
 func NewLoggerFx(
-	logger Logger,
+	log logger.Logger,
 ) fx.Option {
 	return fx.Invoke(
 		func(lc fx.Lifecycle) {
 			lc.Append(
 				fx.Hook{
 					OnStart: func(ctx context.Context) error {
-						SetLogger(logger)
+						logger.SetLogger(log)
 						return nil
 					},
-					OnStop: Stop,
+					OnStop: logger.Stop,
 				},
 			)
 		},
